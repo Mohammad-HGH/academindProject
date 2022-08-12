@@ -14,8 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+
+# *  we should add own app path in this file,
+# * django finally read this file and recognize what path is for which pattern.
+
+# ! when req coming form our-domain.com/meetups it will always reach this file first.
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('meetups.urls'))
 ]
