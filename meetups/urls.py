@@ -10,6 +10,6 @@ urlpatterns = [
     # * 2) The view function which django should call if this query called by user.
 
     # ! WARNING: don't execute the views function. just point to it.
-    path('meetups/', views.index),  # ? our-domain.com/meetups/
-    path('meetups/<slug:meetup_slug>', views.meetup_details)
+    path('meetups/', views.index, name='all-meetups'),  # ? our-domain.com/meetups/
+    path('meetups/<slug:meetup_slug>', views.meetup_details, name='meetup-detail')
 ]
