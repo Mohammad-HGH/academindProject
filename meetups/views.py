@@ -2,6 +2,7 @@
 
 
 from django.shortcuts import render
+from .models import Meetup
 
 
 # from django.http import HttpResponse
@@ -19,18 +20,8 @@ def index(request):
     # ? second one is the name our template or path to our template (oath are relative from the template's folder)
     # ! without templates folder in the path
 
-    meetups = [
-        {
-            'title': 'A first meetup',
-            'location': 'Tehran',
-            'slug': 'a-first-slug'
-        },
-        {
-            'title': 'A second meetup',
-            'location': 'NY',
-            'slug': 'a-second-slug'
-        },
-    ]
+    # * extract all meetups in DB
+    meetups = Meetup.objects.all()
 
     return render(request, 'meetups/index.html', {
         'show_meetups': True,
@@ -39,11 +30,14 @@ def index(request):
 
 
 def meetup_details(request, meetup_slug):
-    selected_meetup = {
-        'title': 'meetup detail page',
-        'description': 'This is the first meetup'
-    }
-    return render(request, 'meetups/meetup-details.html', {
-        'meetup_title': selected_meetup['title'],
-        'meetup_description': selected_meetup['description']
-    })
+    try:
+        selected_meetup = Meetup.objects.get(slug=meetup_slug)
+        return render(request, 'meetups/meetup-details.html', {
+            'meetup_found': True,
+            'meetup_title': selected_meetup.title,
+            'meetup_description': selected_meetup.description
+        })
+    except Exception as exc:
+        return render(request, 'meetups/meetup-details.html', {
+            'meetup_found': False
+        })
