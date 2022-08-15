@@ -1,8 +1,9 @@
 # * what should happen when certain url entered.
 
 
-from django.shortcuts import render
-from .models import Meetup
+from django.shortcuts import render, redirect
+from .models import Meetup, Participant
+from .forms import RegistrationForm
 
 
 # from django.http import HttpResponse
@@ -32,12 +33,28 @@ def index(request):
 def meetup_details(request, meetup_slug):
     try:
         selected_meetup = Meetup.objects.get(slug=meetup_slug)
+
+        if request.method == 'GET':
+            registration_form = RegistrationForm()
+        else:
+            registration_form = RegistrationForm(request.POST)
+            if registration_form.is_valid():
+                # ! if incoming email is valid in DB, don't save & show existing one.
+                user_email = registration_form.cleaned_data['email']
+                participant, _ = Participant.objects.get_or_create(email=user_email)
+                selected_meetup.participants.add(participant)
+                return redirect('confirm-registration')
+
         return render(request, 'meetups/meetup-details.html', {
             'meetup_found': True,
-            'meetup_title': selected_meetup.title,
-            'meetup_description': selected_meetup.description
+            'meetup': selected_meetup,
+            'form': registration_form
         })
     except Exception as exc:
         return render(request, 'meetups/meetup-details.html', {
             'meetup_found': False
         })
+
+
+def confirm_registration(request):
+    return render(request, 'meetups/registration-success.html')

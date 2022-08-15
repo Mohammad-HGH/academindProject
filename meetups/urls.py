@@ -11,5 +11,6 @@ urlpatterns = [
 
     # ! WARNING: don't execute the views function. just point to it.
     path('meetups/', views.index, name='all-meetups'),  # ? our-domain.com/meetups/
-    path('meetups/<slug:meetup_slug>', views.meetup_details, name='meetup-detail')
+    path('meetups/success', views.confirm_registration, name='confirm-registration'),
+    path('meetups/<slug:meetup_slug>', views.meetup_details, name='meetup-detail'),
 ]
