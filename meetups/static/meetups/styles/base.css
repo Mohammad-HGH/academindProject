@@ -1,0 +1,9 @@
+body {
+    background-color: darkslategrey;
+    color: #FFF;
+}
+
+h1, h2, h3 {
+    color: aquamarine;
+    font-size: 12px;
+}
